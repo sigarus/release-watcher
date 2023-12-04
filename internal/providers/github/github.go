@@ -75,7 +75,7 @@ func (gp *GithubProvider) WatchReleases() (title, description, link string, err 
 			return gp.getTitle(), gp.Release.Body, gp.Release.HtmlUrl, nil
 		}
 
-		time.Sleep(10 * time.Second)
+		time.Sleep(10 * time.Minute)
 	}
 }
 
