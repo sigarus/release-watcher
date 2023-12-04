@@ -77,13 +77,10 @@ secrets: {}
 #     username: "logstash"
 #     password: "password"
 
-
 releases:
-  github:
-    - "kaasops/envoy-xds-controller"
-    - "kaasops/vector-operator"
+  github: []
 
 recievers:
-  telegram:
-    - chatID: "-4095865858"
-      token: 5904887144:AAGfqmwGIzIHXUxhjxLMfRPTts69u62aL3M
+  telegram: []
+    # - chatID: "-0000000"
+    #   token: <TOKEN>
