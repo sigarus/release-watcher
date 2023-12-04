@@ -2,8 +2,21 @@ apiVersion: v1
 entries:
   release-watcher:
   - apiVersion: v2
+    appVersion: v0.0.2
+    created: "2023-12-04T17:43:09.440506+02:00"
+    description: A Helm chart to install Release Watcher
+    digest: e35636aa3e8141c747627b29b8be90f0faf80d261a12b9ea82166082ca358712
+    home: https://github.com/zvlb/release-watcher
+    name: release-watcher
+    sources:
+    - https://github.com/zvlb/release-watcher
+    type: application
+    urls:
+    - https://zvlb.github.io/release-watcher/helm/packages/release-watcher-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: v0.0.1
-    created: "2023-12-04T16:00:08.612314+02:00"
+    created: "2023-12-04T17:43:09.440289+02:00"
     description: A Helm chart to install Release Watcher
     digest: 3d316c53a0a466847d6f336d18241c2f2a1b6edfcd10c6686d53079ea2368005
     home: https://github.com/zvlb/release-watcher
@@ -14,4 +27,4 @@ entries:
     urls:
     - https://zvlb.github.io/release-watcher/helm/packages/release-watcher-0.0.1.tgz
     version: 0.0.1
-generated: "2023-12-04T16:00:08.611547+02:00"
+generated: "2023-12-04T17:43:09.43945+02:00"

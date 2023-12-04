@@ -4,7 +4,7 @@ namespaceOverride: ""
 
 image:
   repository: zvlb/release-watcher
-  tag: "test" # rewrites Chart.AppVersion
+  tag: "" # rewrites Chart.AppVersion
   pullPolicy: IfNotPresent
 
 # -- enables CRD creation and management.
@@ -67,9 +67,7 @@ annotations: {}
 
 # Args to path to operator
 args:
-  - "-config-file /etc/release-watcher"
-#  - "-watch-namespace=vector" # Namespace to filter the list of watched objects
-#  - "-watch-name=vector-operator" # Filter the list of watched objects by checking the app.kubernetes.io/managed-by label
+  - "--config-file=/etc/release-watcher/config.yaml"
 
 secrets: {}
 # - name: elastic-creds
