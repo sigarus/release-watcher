@@ -16,6 +16,7 @@ import (
 func main() {
 	var configFile string
 	flag.StringVar(&configFile, "config-file", "/release-watcher/config.yaml", "Config file.")
+	flag.Parse()
 
 	cfg, err := config.GetConfiguration(configFile)
 	if err != nil {
