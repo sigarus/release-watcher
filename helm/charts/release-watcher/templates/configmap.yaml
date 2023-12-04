@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chart.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  config.yaml: |
+    releases:
+      {{- with .Values.releases.github }}
+      github:
+        {{- range . }}
+        - "{{ . }}"
+        {{- end }}
+      {{- end }}
+    recievers:
+      {{- with .Values.recievers.telegram }}
+      telegram:
+        {{- range . }}
+        - chatID: "{{ .chatID }}"
+          token: "{{ .token }}"
+        {{- end }}
+      {{- end }}

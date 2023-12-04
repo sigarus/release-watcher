@@ -1,0 +1,89 @@
+fullnameOverride: ""
+nameOverride: ""
+namespaceOverride: ""
+
+image:
+  repository: zvlb/release-watcher
+  tag: "test" # rewrites Chart.AppVersion
+  pullPolicy: IfNotPresent
+
+# -- enables CRD creation and management.
+# -- with this option, if you remove this chart, all crd resources will be deleted with it.
+createCRD: true
+
+strategy: {}
+# rollingUpdate:
+#  maxSurge: 25%
+#  maxUnavailable: 25%
+# type: RollingUpdate
+
+imagePullSecrets: []
+
+nodeSelector: {}
+
+securityContext: {}
+  # allowPrivilegeEscalation: false
+  # runAsGroup: 1000
+  # runAsNonRoot: true
+  # readOnlyRootFilesystem: true
+  # seccompProfile:
+  #   type: RuntimeDefault
+  # capabilities:
+  #   drop:
+  #     - ALL
+
+podSecurityContext: {}
+
+tolerations: {}
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 50Mi
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+rbac:
+  create: true
+  annotations: {}
+  extraLabels: {}
+
+# extra Labels for Pods, Deployment
+extraLabels: {}
+
+# Annotations to be added to the deployment
+annotations: {}
+
+# Args to path to operator
+args:
+  - "-config-file /etc/release-watcher"
+#  - "-watch-namespace=vector" # Namespace to filter the list of watched objects
+#  - "-watch-name=vector-operator" # Filter the list of watched objects by checking the app.kubernetes.io/managed-by label
+
+secrets: {}
+# - name: elastic-creds
+#   data:
+#     username: "logstash"
+#     password: "password"
+
+
+releases:
+  github:
+    - "kaasops/envoy-xds-controller"
+    - "kaasops/vector-operator"
+
+recievers:
+  telegram:
+    - chatID: "-4095865858"
+      token: 5904887144:AAGfqmwGIzIHXUxhjxLMfRPTts69u62aL3M
