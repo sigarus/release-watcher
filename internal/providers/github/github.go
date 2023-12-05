@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/avast/retry-go/v4"
+	log "github.com/sirupsen/logrus"
 	"github.com/zvlb/release-watcher/internal/providers"
 )
 
@@ -101,18 +103,35 @@ func (gp *GithubProvider) getRelease() (ReleaseInfo, error) {
 
 	requestURL := fmt.Sprintf("%v://%v/%v/%v", githubAPI_SCHEME, githubAPI_URL, gp.Path, lastReleaseReq)
 
-	res, err := gp.client.Get(requestURL)
-	if err != nil {
-		return ri, err
-	}
+	body, err := retry.DoWithData(
+		func() ([]byte, error) {
+			res, err := gp.client.Get(requestURL)
+			if err != nil {
+				return nil, err
+			}
 
-	if res.StatusCode != http.StatusOK {
-		return ri, errNo200
-	}
+			if res.StatusCode != http.StatusOK {
+				log.Warnf("GitHub requests for repo %v answered with bad StatusCode: %v. Wait 10 min", gp.Path, res.StatusCode)
+				return nil, errNo200
+			}
 
-	body, err := io.ReadAll(res.Body)
+			body, err := io.ReadAll(res.Body)
+			if err != nil {
+				return nil, err
+			}
+
+			return body, nil
+		},
+		retry.DelayType(func(n uint, err error, config *retry.Config) time.Duration {
+			return time.Minute * 10
+		}),
+	)
+
+	// err := retry.Do()
+
 	if err != nil {
-		return ri, err
+		fmt.Println(err)
+		fmt.Println("LOL")
 	}
 
 	err = json.Unmarshal(body, &ri)
