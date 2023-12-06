@@ -31,6 +31,9 @@ var (
 
 	// CLient
 	Client HTTPClient
+
+	getReleaseRate      = time.Hour * 3
+	githubRateLimitWait = time.Hour * 1
 )
 
 type GithubProvider struct {
@@ -77,7 +80,7 @@ func (gp *GithubProvider) WatchReleases() (title, description, link string, err 
 			return gp.getTitle(), gp.Release.Body, gp.Release.HtmlUrl, nil
 		}
 
-		time.Sleep(10 * time.Minute)
+		time.Sleep(getReleaseRate)
 	}
 }
 
@@ -111,7 +114,10 @@ func (gp *GithubProvider) getRelease() (ReleaseInfo, error) {
 			}
 
 			if res.StatusCode != http.StatusOK {
-				log.Warnf("GitHub requests for repo %v answered with bad StatusCode: %v. Wait 10 min", gp.Path, res.StatusCode)
+				if res.StatusCode == http.StatusForbidden {
+					log.Warnf("GitHub requests for repo %v answered with bad StatusCode: %v. It's rate limit error. Wait", gp.Path, res.StatusCode)
+					return nil, errRateLimit
+				}
 				return nil, errNo200
 			}
 
@@ -122,16 +128,18 @@ func (gp *GithubProvider) getRelease() (ReleaseInfo, error) {
 
 			return body, nil
 		},
-		retry.DelayType(func(n uint, err error, config *retry.Config) time.Duration {
-			return time.Minute * 10
+		retry.Attempts(100),
+		retry.RetryIf(func(err error) bool {
+			return err != errNo200
 		}),
+		retry.DelayType(func(n uint, err error, config *retry.Config) time.Duration {
+			return githubRateLimitWait
+		}),
+		retry.LastErrorOnly(true),
 	)
 
-	// err := retry.Do()
-
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("LOL")
+		return ri, err
 	}
 
 	err = json.Unmarshal(body, &ri)
