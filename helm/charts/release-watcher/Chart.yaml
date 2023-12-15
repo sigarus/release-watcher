@@ -2,8 +2,8 @@ apiVersion: v2
 name: release-watcher
 description: A Helm chart to install Release Watcher
 type: application
-version: 0.0.5
-appVersion: "v0.0.5"
+version: 0.0.6
+appVersion: "v0.0.6"
 
 home: https://github.com/zvlb/release-watcher
 sources: 
