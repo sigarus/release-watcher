@@ -29,10 +29,10 @@ func (tr *TelegramReciever) GetName() string {
 	return fmt.Sprintf("Telegram chat %s ", tr.ChatID)
 }
 
-func (tr *TelegramReciever) SendData(title, description, link string) error {
+func (tr *TelegramReciever) SendData(name, release, description, link string) error {
 	url := fmt.Sprintf("%v%v/%v", telegramAPI, tr.Token, "sendMessage")
 
-	text := fmt.Sprintf("%v\n%v\n\n%v", title, description, link)
+	text := fmt.Sprintf("<b>%v</b>. Release: <b>%v</b>\n%v\n\n%v", name, release, description, link)
 
 	body, err := json.Marshal(map[string]string{
 		"chat_id":    tr.ChatID,

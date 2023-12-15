@@ -53,22 +53,16 @@ func New(path string, client *http.Client) (providers.Provider, error) {
 	}
 
 	// Get actual release
-	release, err := gp.getRelease()
+	var err error
+	gp.Release, err = gp.getRelease()
 	if err != nil {
 		return nil, err
 	}
 
-	gp.Release = release
-
 	return &gp, nil
 }
 
-func (gp *GithubProvider) WatchReleases() (title, description, link string, err error) {
-	gp.Release, err = gp.getRelease()
-	if err != nil {
-		return
-	}
-
+func (gp *GithubProvider) WatchReleases() (name, release, description, link string, err error) {
 	for {
 		newReleaseExist := false
 		newReleaseExist, err = gp.newReleaseExist()
@@ -77,7 +71,7 @@ func (gp *GithubProvider) WatchReleases() (title, description, link string, err 
 		}
 
 		if newReleaseExist {
-			return gp.getTitle(), gp.Release.Body, gp.Release.HtmlUrl, nil
+			return gp.getName(), gp.Release.TagName, gp.Release.Body, gp.Release.HtmlUrl, nil
 		}
 
 		time.Sleep(getReleaseRate)
@@ -105,7 +99,7 @@ func (gp *GithubProvider) getRelease() (ReleaseInfo, error) {
 	var ri ReleaseInfo
 
 	requestURL := fmt.Sprintf("%v://%v/%v/%v", githubAPI_SCHEME, githubAPI_URL, gp.Path, lastReleaseReq)
-	log.Infof("Start getRelease URL  %s", requestURL)
+	log.Debugf("Start getRelease URL  %s", requestURL)
 	body, err := retry.DoWithData(
 		func() ([]byte, error) {
 			res, err := gp.client.Get(requestURL)
@@ -154,8 +148,8 @@ func (gp *GithubProvider) updateRelease(release ReleaseInfo) {
 	gp.Release = release
 }
 
-func (gp *GithubProvider) getTitle() string {
+func (gp *GithubProvider) getName() string {
 	path := strings.Split(gp.Path, "/")
 
-	return fmt.Sprintf("<b>%v</b>\n Release: <b>%v</b>\n", path[1], gp.Release.TagName)
+	return path[1]
 }

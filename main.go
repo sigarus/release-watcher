@@ -50,14 +50,14 @@ func StartWatchers(cfg config.Config) error {
 func Watcher(provired providers.Provider, recievers []recievers.Reciever) error {
 	log.Infof("Start Release Watch for %v", provired.GetName())
 	for {
-		title, description, link, err := provired.WatchReleases()
+		name, release, description, link, err := provired.WatchReleases()
 		if err != nil {
 			return err
 		}
 
 		log.Infof("Find New Release for %v", provired.GetName())
 		for _, r := range recievers {
-			err = r.SendData(title, description, link)
+			err = r.SendData(name, release, description, link)
 			if err != nil {
 				log.Infof("Can't send data to reciever %s with error: %v", r.GetName(), err)
 			}

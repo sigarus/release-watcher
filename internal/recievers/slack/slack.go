@@ -31,10 +31,10 @@ func (sr *SlackReciever) GetName() string {
 	return fmt.Sprintf("Slack channel %s ", sr.ChannelName)
 }
 
-func (sr *SlackReciever) SendData(title, description, link string) error {
+func (sr *SlackReciever) SendData(name, release, description, link string) error {
 	url := fmt.Sprintf("%v", sr.Hook) //??????
 
-	text := fmt.Sprintf("%v\n%v\n\n%v", title, description, link)
+	text := fmt.Sprintf("%v. Release: %v\n%v\n\n%v", name, release, description, link)
 
 	body, err := json.Marshal(map[string]string{
 		"text": text,
