@@ -17,6 +17,12 @@ type Releases struct {
 
 type Recievers struct {
 	Telegram []TelegramReciever `yaml:"telegram"`
+	Slack    []SlackReciever    `yaml:"slack"`
+}
+
+type SlackReciever struct {
+	ChannelName string `yaml:"channelName"`
+	Hook        string `yaml:"hook"`
 }
 
 type TelegramReciever struct {

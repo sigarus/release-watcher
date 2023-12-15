@@ -1,6 +1,6 @@
 module github.com/zvlb/release-watcher
 
-go 1.21.2
+go 1.21
 
 require (
 	github.com/avast/retry-go/v4 v4.5.1
