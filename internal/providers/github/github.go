@@ -105,7 +105,7 @@ func (gp *GithubProvider) getRelease() (ReleaseInfo, error) {
 	var ri ReleaseInfo
 
 	requestURL := fmt.Sprintf("%v://%v/%v/%v", githubAPI_SCHEME, githubAPI_URL, gp.Path, lastReleaseReq)
-
+	log.Infof("Start getRelease URL  %s", requestURL)
 	body, err := retry.DoWithData(
 		func() ([]byte, error) {
 			res, err := gp.client.Get(requestURL)

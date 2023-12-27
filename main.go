@@ -10,6 +10,7 @@ import (
 	"github.com/zvlb/release-watcher/internal/providers"
 	"github.com/zvlb/release-watcher/internal/providers/github"
 	"github.com/zvlb/release-watcher/internal/recievers"
+	"github.com/zvlb/release-watcher/internal/recievers/slack"
 	"github.com/zvlb/release-watcher/internal/recievers/telegram"
 )
 
@@ -56,7 +57,10 @@ func Watcher(provired providers.Provider, recievers []recievers.Reciever) error 
 
 		log.Infof("Find New Release for %v", provired.GetName())
 		for _, r := range recievers {
-			r.SendData(title, description, link)
+			err = r.SendData(title, description, link)
+			if err != nil {
+				log.Infof("Can't send data to reciever %s with error: %v", r.GetName(), err)
+			}
 		}
 	}
 }
@@ -69,7 +73,11 @@ func generateRecievers(cfg config.Config) []recievers.Reciever {
 		r := telegram.New(t.Token, t.ChatID)
 		recievers = append(recievers, r)
 	}
-
+	// Get slack Recievers
+	for _, t := range cfg.Recievers.Slack {
+		r := slack.New(t.ChannelName, t.Hook)
+		recievers = append(recievers, r)
+	}
 	return recievers
 }
 

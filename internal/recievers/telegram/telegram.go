@@ -25,6 +25,10 @@ func New(token, chatID string) recievers.Reciever {
 	}
 }
 
+func (tr *TelegramReciever) GetName() string {
+	return fmt.Sprintf("Telegram chat %s ", tr.ChatID)
+}
+
 func (tr *TelegramReciever) SendData(title, description, link string) error {
 	url := fmt.Sprintf("%v%v/%v", telegramAPI, tr.Token, "sendMessage")
 
@@ -44,6 +48,7 @@ func (tr *TelegramReciever) SendData(title, description, link string) error {
 		"application/json",
 		bytes.NewBuffer(body),
 	)
+
 	if err != nil {
 		return err
 	}
