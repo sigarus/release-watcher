@@ -37,7 +37,8 @@ func (sr *SlackReciever) SendData(name, release, description, link string) error
 	text := fmt.Sprintf("%v. Release: %v\n%v\n\n%v", name, release, description, link)
 
 	body, err := json.Marshal(map[string]string{
-		"text": text,
+		"text":    text,
+		"channel": sr.ChannelName,
 	})
 
 	if err != nil {
