@@ -26,3 +26,10 @@ data:
           token: "{{ .token }}"
         {{- end }}
       {{- end }}
+      {{- with .Values.recievers.slack }}
+      slack:
+        {{- range . }}
+        - channelName: "{{ .channelName }}"
+          hook: "{{ .hook }}"
+        {{- end }}
+      {{- end }}

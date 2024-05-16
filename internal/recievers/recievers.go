@@ -1,6 +1,6 @@
 package recievers
 
 type Reciever interface {
-	SendData(title, description, link string) error
+	SendData(name, release, description, link string) error
 	GetName() string
 }
