@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/zvlb/release-watcher/internal/config"
 	"github.com/zvlb/release-watcher/internal/recievers"
 )
 
@@ -18,12 +19,14 @@ var (
 type SlackReciever struct {
 	ChannelName string `yaml:"channelName"`
 	Hook        string `yaml:"hook"`
+	Config      config.Config
 }
 
-func New(channelname, hook string) recievers.Reciever {
+func New(channelname, hook string, config config.Config) recievers.Reciever {
 	return &SlackReciever{
 		ChannelName: channelname,
 		Hook:        hook,
+		Config:      config,
 	}
 }
 
@@ -34,7 +37,12 @@ func (sr *SlackReciever) GetName() string {
 func (sr *SlackReciever) SendData(name, release, description, link string) error {
 	url := fmt.Sprintf("%v", sr.Hook) //??????
 
-	text := fmt.Sprintf("%v. Release: %v\n%v\n\n%v", name, release, description, link)
+	var text string
+	if sr.Config.Params.SendReleaseDescription {
+		text = fmt.Sprintf("%v. Release: %v\n%v\n\n%v", name, release, description, link)
+	} else {
+		text = fmt.Sprintf("%v. Release: %v\n%v", name, release, link)
+	}
 
 	body, err := json.Marshal(map[string]string{
 		"text":    text,

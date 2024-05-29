@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/zvlb/release-watcher/internal/config"
 	"github.com/zvlb/release-watcher/internal/recievers"
 )
 
@@ -16,12 +17,14 @@ var (
 type TelegramReciever struct {
 	Token  string `yaml:"token"`
 	ChatID string `yaml:"chatID"`
+	Config config.Config
 }
 
-func New(token, chatID string) recievers.Reciever {
+func New(token, chatID string, config config.Config) recievers.Reciever {
 	return &TelegramReciever{
 		Token:  token,
 		ChatID: chatID,
+		Config: config,
 	}
 }
 
@@ -32,7 +35,12 @@ func (tr *TelegramReciever) GetName() string {
 func (tr *TelegramReciever) SendData(name, release, description, link string) error {
 	url := fmt.Sprintf("%v%v/%v", telegramAPI, tr.Token, "sendMessage")
 
-	text := fmt.Sprintf("<b>%v</b>. Release: <b>%v</b>\n%v\n\n%v", name, release, description, link)
+	var text string
+	if tr.Config.Params.SendReleaseDescription {
+		text = fmt.Sprintf("<b>%v</b>. Release: <b>%v</b>\n%v\n\n%v", name, release, description, link)
+	} else {
+		text = fmt.Sprintf("<b>%v</b>. Release: <b>%v</b>\n%v", name, release, link)
+	}
 
 	body, err := json.Marshal(map[string]string{
 		"chat_id":    tr.ChatID,

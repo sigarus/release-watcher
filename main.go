@@ -70,12 +70,12 @@ func generateRecievers(cfg config.Config) []recievers.Reciever {
 
 	// Get telegram Recievers
 	for _, t := range cfg.Recievers.Telegram {
-		r := telegram.New(t.Token, t.ChatID)
+		r := telegram.New(t.Token, t.ChatID, cfg)
 		recievers = append(recievers, r)
 	}
 	// Get slack Recievers
 	for _, t := range cfg.Recievers.Slack {
-		r := slack.New(t.ChannelName, t.Hook)
+		r := slack.New(t.ChannelName, t.Hook, cfg)
 		recievers = append(recievers, r)
 	}
 	return recievers
