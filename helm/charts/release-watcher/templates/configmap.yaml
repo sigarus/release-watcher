@@ -33,3 +33,5 @@ data:
           hook: "{{ .hook }}"
         {{- end }}
       {{- end }}
+    params:
+      sendReleaseDescription: {{ .Values.params.sendReleaseDescription }}

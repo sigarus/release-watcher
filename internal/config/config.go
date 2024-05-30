@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Releases  Releases  `yaml:"releases"`
 	Recievers Recievers `yaml:"recievers"`
+	Params    Params    `yaml:params`
 }
 
 type Releases struct {
@@ -28,6 +29,10 @@ type SlackReciever struct {
 type TelegramReciever struct {
 	ChatID string `yaml:"chatID"`
 	Token  string `yaml:"token"`
+}
+
+type Params struct {
+	SendReleaseDescription bool `yaml:"sendReleaseDescription"`
 }
 
 func GetConfiguration(path string) (Config, error) {
